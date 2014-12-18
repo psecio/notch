@@ -1,0 +1,8 @@
+{
+	"require": {
+		"enygma/modler": "1.3",
+        "robmorgan/phinx": "*",
+        "slim/slim": "2.5.0",
+        "slimcontroller/slimcontroller": "dev-master"
+	}
+}
