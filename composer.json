@@ -1,8 +1,9 @@
 {
 	"require": {
-		"enygma/modler": "1.3",
+		"enygma/modler": "1.4",
         "robmorgan/phinx": "*",
         "slim/slim": "2.5.0",
-        "slimcontroller/slimcontroller": "dev-master"
-	}
+        "pimple/pimple": "3.0.0"
+	},
+    "minimum-stability": "dev"
 }
