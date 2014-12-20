@@ -6,7 +6,7 @@
     <div class="alert <?php echo $type; ?>" role="alert"><?php echo $message; ?></div>
 <?php endif; ?>
 
-<!-- SQLi Hint: " or 1=1; # -->
+<!-- Hint [SQLi]: " or 1=1; # -->
 <form class="form-horizontal" role="form" method="POST" action="/user/login">
     <div class="form-group">
         <label for="username" class="control-label col-sm-2">Username</label>
