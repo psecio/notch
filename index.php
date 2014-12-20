@@ -21,7 +21,12 @@ $di['db'] = function()
     return new Notch\Database('127.0.0.1', 'notch', 'notch42', 'notch');
 };
 
-$app = new Slim\Slim();
+$app = new Slim\Slim(array(
+    'debug' => false
+));
+$app->error(function (\Exception $e) use ($app) {
+    // do nothing...
+});
 
 /**
  * Index routing
@@ -45,6 +50,8 @@ $app->group('/post', function() use ($app, $di) {
     $app->get('/', function() use ($app, $di) {
         $app->render('post/index.php');
     });
+
+    // Hint [Auth]: Protection?
     $app->get('/detail/:id', function($postId) use ($app, $di) {
         $post = new Notch\Posts($di);
         $data = array(
@@ -55,6 +62,25 @@ $app->group('/post', function() use ($app, $di) {
     });
     $app->get('/add', function() use ($app, $di) {
         $app->render('post/add.php');
+    });
+    $app->post('/add', function() use ($app, $di) {
+        $posted = $app->request->post();
+        $success = true;
+        $message = 'Post created successfully!';
+        $posted['author'] = $_SESSION['username'];
+
+        $post = new Notch\Posts($di);
+        $success = $post->create($posted);
+
+        if ($success == false) {
+            $message = 'There was an error creating the post!';
+        }
+
+        $data = array(
+            'success' => $success,
+            'message' => $message
+        );
+        $app->render('post/add.php', $data);
     });
 });
 
@@ -78,7 +104,9 @@ $app->group('/user', function() use ($app, $di) {
         if ($success === false) {
             $message = 'There was an error logging in!';
         } else {
-            $_SESSION['username'] = $username;
+            $userData = $user->getUserByUsername($username);
+            $_SESSION['username'] = $userData['username'];
+            $_SESSION['userId'] = $userData['id'];
         }
 
         $data = array(
