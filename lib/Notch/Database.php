@@ -29,6 +29,6 @@ class Database
     public function fetchOne($sql)
     {
         $result = $this->fetch($sql);
-        return (count($result) > 1) ? array_shift($result) : $result;
+        return array_shift($result);
     }
 }
