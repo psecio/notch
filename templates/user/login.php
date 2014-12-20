@@ -1,9 +1,12 @@
 <h2>User Login</h2>
 
-<?php if(isset($success) && $success === false): ?>
-    <div class="alert alert-danger" role="alert"><?php echo $message; ?></div>
+<?php if(isset($success)):
+    $type = ($success === false) ? 'alert-danger' : 'alert-success';
+    ?>
+    <div class="alert <?php echo $type; ?>" role="alert"><?php echo $message; ?></div>
 <?php endif; ?>
 
+<!-- SQLi Hint: " or 1=1; # -->
 <form class="form-horizontal" role="form" method="POST" action="/user/login">
     <div class="form-group">
         <label for="username" class="control-label col-sm-2">Username</label>
@@ -23,3 +26,5 @@
         </div>
     </div>
 </form>
+<br/>
+Don't have a login? <a href="/user/register">Register here</a>
