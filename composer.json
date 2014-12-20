@@ -3,7 +3,8 @@
 		"enygma/modler": "1.4",
         "robmorgan/phinx": "*",
         "slim/slim": "2.5.0",
-        "pimple/pimple": "3.0.0"
+        "pimple/pimple": "3.0.0",
+        "ircmaxell/password-compat": "1.0.4"
 	},
     "minimum-stability": "dev"
 }
