@@ -17,4 +17,12 @@ class Posts extends Base
         $sql = 'select * from posts where ID = '.$postId;
         return $this->getDb()->fetchOne($sql);
     }
+
+    public function create($data)
+    {
+        $sql = 'insert into posts (title, content, author, created, updates)'
+            .' values ("'.$data['title'].'", "'.$data['content'].'", '.$data['author'].','
+            .' now(), now())';
+        return $this->getDb()->execute($sql);
+    }
 }
