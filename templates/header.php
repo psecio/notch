@@ -24,3 +24,6 @@
 			</div>
 		</nav>
 		<div class="container" style="padding-top:70px">
+			<?php if (isset($_SESSION['username'])): ?>
+				<div>Logged in as <b><?php echo $_SESSION['username']; ?></b> (<a href="/user/logout">logout</a>)</div>
+			<?php endif; ?>
