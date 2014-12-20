@@ -1,4 +1,5 @@
 <?php
+session_start();
 
 require_once 'vendor/autoload.php';
 require 'templates/header.php';
@@ -22,6 +23,9 @@ $di['db'] = function()
 
 $app = new Slim\Slim();
 
+/**
+ * Index routing
+ */
 $app->get('/', function() use ($app, $di) {
 
     // Get the most recent posts
@@ -33,6 +37,9 @@ $app->get('/', function() use ($app, $di) {
 	$app->render('index/index.php', array('test' => 'foo'));
 });
 
+/**
+ * Posts routing
+ */
 $app->group('/post', function() use ($app, $di) {
 
     $app->get('/', function() use ($app, $di) {
@@ -51,13 +58,16 @@ $app->group('/post', function() use ($app, $di) {
     });
 });
 
+/**
+ * User routing
+ */
 $app->group('/user', function() use ($app, $di) {
 
     $app->get('/login', function() use ($app, $di) {
         $app->render('user/login.php');
     });
     $app->post('/login', function() use ($app, $di) {
-        $message = '';
+        $message = 'Login successful!';
 
         $username = $app->request->post('username');
         $password = $app->request->post('password');
@@ -67,6 +77,8 @@ $app->group('/user', function() use ($app, $di) {
 
         if ($success === false) {
             $message = 'There was an error logging in!';
+        } else {
+            $_SESSION['username'] = $username;
         }
 
         $data = array(
@@ -75,6 +87,36 @@ $app->group('/user', function() use ($app, $di) {
         );
 
         $app->render('user/login.php', $data);
+    });
+    $app->get('/register', function() use ($app, $di) {
+        $app->render('user/register.php');
+    });
+    $app->post('/register', function() use ($app, $di) {
+        $message = 'Success!';
+        $posted = $app->request->post();
+        $user = new Notch\Users($di);
+
+        // Be sure we don't already have that user
+        $find = $user->getUserByUsername($posted['username']);
+        if (!empty($find)) {
+            $success = false;
+            $message = 'User "'.$posted['username'].'" already exists!';
+        } else {
+            $success = $user->create($posted);
+            if ($success === false) {
+                $message = 'There was an error creating the user!';
+            }
+        }
+
+        $data = array(
+            'success' => $success,
+            'message' => $message
+        );
+        $app->render('user/register.php', $data);
+    });
+    $app->get('/logout', function() use ($app, $di) {
+        unset($_SESSION['username']);
+        $app->render('user/logout.php');
     });
 });
 
