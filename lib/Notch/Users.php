@@ -2,27 +2,31 @@
 
 namespace Notch;
 
-class Users
+class Users extends Base
 {
-    protected $di;
-
-    public function __construct(\Pimple\Container $di)
+    public function getUserById($userId)
     {
-        $this->di = $di;
+        return $this->getDb()->fetchOne('select * from users where id = '.$userId);
     }
 
-    public function getUser($userId)
+    public function getUserByUsername($username)
     {
-        $db = $this->di['db'];
-        return $db->fetchOne('select * from users where id = '.$userId);
+        return $this->getDb()->fetchOne('select * from users where username = "'.$username.'"');
     }
 
     public function login($username, $password)
     {
-        $db = $this->di['db'];
-        $result = $db->fetchOne(
-            'select * from users where username = "'.$username.'" and password = "'.$password.'"'
-        );
+        $sql = 'select * from users where username = "'.$username.'" and password = "'.$password.'"';
+        $result = $this->getDb()->fetchOne($sql);
         return (empty($result)) ? false : true;
+    }
+
+    public function create($data)
+    {
+        $sql = 'insert into users (username, password, email, created, updated)'
+            .' values ("'.$data['username'].'", "'.$data['password'].'",'
+            .' "'.$data['email'].'", now(), now())';
+
+        return $this->getDb()->execute($sql);
     }
 }
