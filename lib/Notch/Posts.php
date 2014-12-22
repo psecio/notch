@@ -20,9 +20,23 @@ class Posts extends Base
 
     public function create($data)
     {
-        $sql = 'insert into posts (title, content, author, created, updates)'
-            .' values ("'.$data['title'].'", "'.$data['content'].'", '.$data['author'].','
+        $sql = 'insert into posts (title, content, author, created, updated)'
+            .' values ("'.$data['title'].'", "'.addslashes($data['content']).'", "'.$data['author'].'",'
             .' now(), now())';
+        return $this->getDb()->execute($sql);
+    }
+
+    public function delete($postId)
+    {
+        $sql = 'delete from posts where ID = '.$postId;
+        return $this->getDb()->execute($sql);
+    }
+
+    public function save($data)
+    {
+        $sql = 'update posts set title="'.$data['title'].'", content="'.addslashes($data['content']).'"'
+            .', author = "'.$data['author'].'",'
+            .' updated = now() where id = '. $data['id'];
         return $this->getDb()->execute($sql);
     }
 }
