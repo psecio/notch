@@ -2,6 +2,8 @@
 <html lang="en">
 	<head>
 		<link href="/assets/css/bootstrap.min.css" rel="stylesheet">
+		<link href="/assets/css/site.css" rel="stylesheet">
+		<script type="text/javascript" src="/assets/js/jquery-1.11.1.min.js"></script>
 	</head>
 	<body>
 		<nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">

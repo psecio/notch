@@ -1,0 +1,9 @@
+div.post a.title {
+    font-size: 23px;
+    font-weight: bold;
+    color: #0099CC;
+}
+div.post span.date {
+    color: #7c7c7c;
+    font-size: 11px;
+}
