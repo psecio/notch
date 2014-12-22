@@ -22,7 +22,7 @@ This should get you up and running with your basic site and a bit of content.
 
 ### Vagrant installation
 
-A Vagrant setup has been provided in the `vagrat/` directory making it a one command install once it's cloned:
+A Vagrant setup has been provided in the `vagrant/` directory making it a one command install once it's cloned:
 
 ```
 cd vagrant; vagrant up
