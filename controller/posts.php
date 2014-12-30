@@ -60,8 +60,14 @@ $app->group('/post', function() use ($app, $di) {
     $app->get('/delete/:id', function($postId) use ($app, $di) {
         $post = new Notch\Posts($di);
         $postData = $post->getDetail($postId);
+
+        // Make a token and add it to the session
+        $token = \Psecio\Csrf\Token::generate('random');
+        $_SESSION['csrf'] = $token;
+
         $data = array(
-            'post' => $postData
+            'post' => $postData,
+            'token' => $token
         );
         $app->render('post/delete.php', $data);
     });
@@ -69,14 +75,26 @@ $app->group('/post', function() use ($app, $di) {
     // Hint [Auth]: Protection?
     // Hint [CSRF]: Protection?
     $app->post('/delete/:id', function($postId) use ($app, $di) {
-        $post = new Notch\Posts($di);
-        $postData = $post->getDetail($postId);
-        $message = 'Post deleted successfully!';
+        $success = true;
+        $postData = array();
 
-        $success = $post->delete($postId);
+        // First, check the token
+        $token = $app->request->post('csrf');
+        if ($token !== $_SESSION['csrf']) {
+            $success = false;
+            $message = 'Error: token mismatch!';
+        }
 
-        if ($success == false) {
-            $message = 'There was an error deleting the post!';
+        if ($success === true) {
+            $post = new Notch\Posts($di);
+            $postData = $post->getDetail($postId);
+            $message = 'Post deleted successfully!';
+
+            $success = $post->delete($postId);
+
+            if ($success == false) {
+                $message = 'There was an error deleting the post!';
+            }
         }
 
         $data = array(
