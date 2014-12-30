@@ -8,27 +8,26 @@ class Database
 
     public function __construct($host, $user, $pass, $dbname)
     {
-        $this->db = mysql_connect($host, $user, $pass);
-        mysql_select_db($dbname, $this->db);
+        $dsn = 'mysql:host='.$host.';dbname='.$dbname;
+        $this->db = new \PDO($dsn, $user, $pass);
     }
 
-    public function execute($sql)
+    public function execute($sql, array $data = array())
     {
-        return mysql_query($sql, $this->db);
+        $sth = $this->db->prepare($sql);
+        return $sth->execute($data);
     }
 
-    public function fetch($sql)
+    public function fetch($sql, array $data = array())
     {
-        $results = array();
-        $result = mysql_query($sql, $this->db);
-        while($row = mysql_fetch_assoc($result)) {
-            $results[] = $row;
-        }
-        return $results;
+        $sth = $this->db->prepare($sql);
+        $sth->execute($data);
+
+        return $sth->fetchAll(\PDO::FETCH_ASSOC);
     }
-    public function fetchOne($sql)
+    public function fetchOne($sql, array $data = array())
     {
-        $result = $this->fetch($sql);
+        $result = $this->fetch($sql, $data);
         return array_shift($result);
     }
 }
