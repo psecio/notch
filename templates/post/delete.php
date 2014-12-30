@@ -1,20 +1,19 @@
 <h2>Delete Post</h2>
 
-<script type="text/javascript">
-$(function() {
-    $('#btn-no').click(function(e) {
-        console.log('here');
-        e.preventDefault();
-        document.location.href = "/post/detail/<?php echo $post['id']; ?>";
-    });
-});
-</script>
-
 <?php if(isset($success)):
     $type = ($success === false) ? 'alert-danger' : 'alert-success';
     ?>
     <div class="alert <?php echo $type; ?>" role="alert"><?php echo $message; ?></div>
 <?php endif; ?>
+
+<script type="text/javascript">
+$(function() {
+    $('#btn-no').click(function(e) {
+        e.preventDefault();
+        document.location.href = "/post/detail/<?php echo (isset($post['id'])) ? $post['id'] : ''; ?>";
+    });
+});
+</script>
 
 <p>
 Are you sure you want to delete <b><?php echo $post['title']; ?></b>?<br/>
