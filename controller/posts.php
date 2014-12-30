@@ -65,7 +65,9 @@ $app->group('/post', function() use ($app, $di) {
         );
         $app->render('post/delete.php', $data);
     });
+
     // Hint [Auth]: Protection?
+    // Hint [CSRF]: Protection?
     $app->post('/delete/:id', function($postId) use ($app, $di) {
         $post = new Notch\Posts($di);
         $postData = $post->getDetail($postId);
