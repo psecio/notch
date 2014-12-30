@@ -18,6 +18,7 @@
         "slim/slim": "2.5.0",
         "pimple/pimple": "3.0.0",
         "ircmaxell/password-compat": "1.0.4",
+        "psecio/csrf": "dev-master",
         "php":">=5.3.1"
     },
     "require-dev": {
