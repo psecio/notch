@@ -61,5 +61,52 @@ $app->group('/user', function() use ($app, $di) {
         unset($_SESSION['username']);
         $app->render('user/logout.php');
     });
+
+    $app->get('/detail/:username', function($username) use ($app, $di) {
+        $user = new Notch\Users($di);
+        $data = array(
+            'user' => $user->getUserByUsername($username),
+            'currentUser' => $_SESSION['username']
+        );
+        $app->render('user/detail.php', $data);
+    });
+
+    $app->get('/edit/:username', function($username) use ($app, $di) {
+        $user = new Notch\Users($di);
+        $data = array(
+            'user' => $user->getUserByUsername($username),
+            'currentUser' => $_SESSION['username']
+        );
+        $app->render('user/edit.php', $data);
+    });
+    $app->post('/edit/:username', function($username) use ($app, $di) {
+        $success = true;
+        $message = 'User updated successfully!';
+        $user = new Notch\Users($di);
+        $userData = $user->getUserByUsername($username);
+
+        if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
+            $destination = realpath(__DIR__.'/../assets/img/uploads').'/'.$_FILES['avatar']['name'];
+            move_uploaded_file($_FILES['avatar']['tmp_name'], $destination);
+        } else {
+            $success = false;
+            $message = 'Problem uploading avatar image!';
+        }
+
+        if ($success == true) {
+            $data = $app->request->post();
+            $data['id'] = $userData['id'];
+            $data['avatar'] = $_FILES['avatar']['name'];
+            $user->save($data);
+        }
+
+        $data = array(
+            'user' => $userData,
+            'currentUser' => $_SESSION['username'],
+            'success' => $success,
+            'message' => $message
+        );
+        $app->render('/user/edit.php', $data);
+    });
 });
 ?>
