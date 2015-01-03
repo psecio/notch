@@ -13,6 +13,7 @@ class CreateUsersTable extends AbstractMigration
         $posts->addColumn('username', 'string')
             ->addColumn('password', 'text')
             ->addColumn('email', 'string')
+            ->addColumn('avatar', 'string', array('null' => true))
             ->addColumn('created', 'datetime')
             ->addColumn('updated', 'datetime')
             ->create();
