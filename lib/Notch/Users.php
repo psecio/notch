@@ -34,7 +34,6 @@ class Users extends Base
     {
         $sql = 'update users set password = "'.$data['password'].'", email = "'.$data['email'].'"'
             .' where id = '.$data['id'];
-        echo $sql;
 
         return $this->getDb()->execute($sql);
     }
