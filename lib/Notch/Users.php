@@ -29,4 +29,13 @@ class Users extends Base
 
         return $this->getDb()->execute($sql);
     }
+
+    public function save($data)
+    {
+        $sql = 'update users set password = "'.$data['password'].'", email = "'.$data['email'].'"'
+            .' where id = '.$data['id'];
+        echo $sql;
+
+        return $this->getDb()->execute($sql);
+    }
 }
