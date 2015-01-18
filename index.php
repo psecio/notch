@@ -2,9 +2,27 @@
 session_start();
 
 require_once 'vendor/autoload.php';
-require 'templates/header.php';
 
 use Pimple\Container;
+
+class CustomView extends \Slim\View
+{
+    public function render($template)
+    {
+        $data = $this->data->all();
+
+        if (!isset($data['no-template']) || $data['no-template'] === false) {
+            require 'templates/header.php';
+        }
+
+        extract($data);
+        require_once __DIR__.'/templates/'.$template;
+
+        if (!isset($data['no-template']) || $data['no-template'] === false) {
+            require 'templates/footer.php';
+        }
+    }
+}
 
 // Custom autoloader
 spl_autoload_register(function($class) {
@@ -22,7 +40,8 @@ $di['db'] = function()
 };
 
 $app = new Slim\Slim(array(
-    'debug' => true
+    'debug' => true,
+    'view' => new CustomView()
 ));
 $app->error(function (\Exception $e) use ($app) {
     // do nothing...
@@ -49,5 +68,3 @@ require 'controller/posts.php';
 require 'controller/user.php';
 
 $app->run();
-
-require 'templates/footer.php';
