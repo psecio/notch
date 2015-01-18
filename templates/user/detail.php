@@ -16,7 +16,8 @@
 	<?php if (isset($user['avatar'])): ?>
 	<tr>
 		<td width="150"><b>Avatar:</b></td>
-		<td><img src="/assets/img/uploads/<?php echo $user['avatar']; ?>" width="150"/></td>
+		<!-- <td><img src="/assets/img/uploads/<?php echo $user['avatar']; ?>" width="150"/></td> -->
+		<td><img src="/user/image/<?php echo $user['username']; ?>" width="150"/></td>
 	</tr>
 	<?php endif; ?>
 </table>

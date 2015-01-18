@@ -91,7 +91,7 @@ $app->group('/user', function() use ($app, $di) {
         $userData = $user->getUserByUsername($username);
 
         if (isset($_FILES['avatar']) && $_FILES['avatar']['error'] == 0) {
-            $destination = realpath(__DIR__.'/../assets/img/uploads').'/'.$_FILES['avatar']['name'];
+            $destination = realpath(__DIR__.'/../../notch-uploads').'/'.$_FILES['avatar']['name'];
             move_uploaded_file($_FILES['avatar']['tmp_name'], $destination);
         } else {
             $success = false;
@@ -112,6 +112,23 @@ $app->group('/user', function() use ($app, $di) {
             'message' => $message
         );
         $app->render('/user/edit.php', $data);
+    });
+    $app->get('/image/:username', function($username) use ($app, $di) {
+        $user = new Notch\Users($di);
+        $userData = $user->getUserByUsername($username);
+        $imageData = '';
+
+        if (isset($userData['avatar'])) {
+            $image = realpath(__DIR__.'/../../notch-uploads').'/'.$userData['avatar'];
+            if (is_file($image)) {
+                $imageData = file_get_contents($image);
+            }
+        }
+        $data = array(
+            'imageData' => $imageData,
+            'no-template' => true
+        );
+        $app->render('/user/image.php', $data);
     });
 
     // ------ Delete ------
