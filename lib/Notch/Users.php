@@ -32,9 +32,11 @@ class Users extends Base
 
     public function save($data)
     {
-        $sql = 'update users set password = "'.$data['password'].'", email = "'.$data['email'].'"'
-            .' where id = '.$data['id'];
-
+        $sql = 'update users set password = "'.$data['password'].'", email = "'.$data['email'].'"';
+        if (isset($data['avatar'])) {
+            $sql .= ', avatar = "'.$data['avatar'].'"';
+        }
+        $sql .=' where id = '.$data['id'];
         return $this->getDb()->execute($sql);
     }
 
