@@ -37,4 +37,10 @@ class Users extends Base
 
         return $this->getDb()->execute($sql);
     }
+
+    public function delete($userId)
+    {
+        $sql = 'delete from users where ID = '.$userId;
+        return $this->getDb()->execute($sql);
+    }
 }

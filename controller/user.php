@@ -4,6 +4,7 @@
  */
 $app->group('/user', function() use ($app, $di) {
 
+    // ------ Login/Logout ------
     $app->get('/login', function() use ($app, $di) {
         $app->render('user/login.php');
     });
@@ -31,6 +32,12 @@ $app->group('/user', function() use ($app, $di) {
 
         $app->render('user/login.php', $data);
     });
+    $app->get('/logout', function() use ($app, $di) {
+        unset($_SESSION['username']);
+        $app->render('user/logout.php');
+    });
+
+    // ------ Register ------
     $app->get('/register', function() use ($app, $di) {
         $app->render('user/register.php');
     });
@@ -57,11 +64,8 @@ $app->group('/user', function() use ($app, $di) {
         );
         $app->render('user/register.php', $data);
     });
-    $app->get('/logout', function() use ($app, $di) {
-        unset($_SESSION['username']);
-        $app->render('user/logout.php');
-    });
 
+    // ------ Detail ------
     $app->get('/detail/:username', function($username) use ($app, $di) {
         $user = new Notch\Users($di);
         $data = array(
@@ -71,6 +75,7 @@ $app->group('/user', function() use ($app, $di) {
         $app->render('user/detail.php', $data);
     });
 
+    // ------ Edit ------
     $app->get('/edit/:username', function($username) use ($app, $di) {
         $user = new Notch\Users($di);
         $data = array(
@@ -107,6 +112,34 @@ $app->group('/user', function() use ($app, $di) {
             'message' => $message
         );
         $app->render('/user/edit.php', $data);
+    });
+
+    // ------ Delete ------
+    $app->get('/delete/:username', function($username) use ($app, $di) {
+        $user = new Notch\Users($di);
+        $userData = $user->getUserByUsername($username);
+
+        $data = array(
+            'user' => $userData
+        );
+        $app->render('/user/delete.php', $data);
+    });
+    $app->post('/delete/:username', function($username) use ($app, $di) {
+        $message = 'There was an error deleteing user '.$username;
+        $user = new Notch\Users($di);
+        $userData = $user->getUserByUsername($username);
+
+        $success = $user->delete($userData['id']);
+        if ($success === true) {
+            $message = 'User '.$username.' deleted successfully';
+        }
+
+        $data = array(
+            'user' => $userData,
+            'success' => $success,
+            'message' => $message
+        );
+        $app->render('/user/delete.php', $data);
     });
 });
 ?>
