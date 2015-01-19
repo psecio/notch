@@ -46,6 +46,12 @@ $app->get('/', function() use ($app, $di) {
 
 	$app->render('index/index.php', $data);
 });
+$app->get('/error', function() use ($app, $di) {
+    $data = array(
+        'message' => 'There was an error!'
+    );
+    $app->render('index/error.php', $data);
+});
 
 // Other controllers
 require 'controller/posts.php';
