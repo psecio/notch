@@ -1,4 +1,6 @@
 <?php
+use Psecio\Gatekeeper\Gatekeeper;
+
 /**
  * User routing
  */
@@ -13,6 +15,13 @@ $app->group('/user', function() use ($app, $di) {
 
         $username = $app->request->post('username');
         $password = $app->request->post('password');
+
+        $credentials = array(
+            'username' => $username,
+            'password' => $password
+        );
+        $result = Gatekeeper::authenticate($credentials);
+        var_export($result);
 
         $user = new Notch\Users($di);
         $success = $user->login($username, $password);
@@ -44,15 +53,20 @@ $app->group('/user', function() use ($app, $di) {
     $app->post('/register', function() use ($app, $di) {
         $message = 'Success!';
         $posted = $app->request->post();
-        $user = new Notch\Users($di);
 
-        // Be sure we don't already have that user
-        $find = $user->getUserByUsername($posted['username']);
-        if (!empty($find)) {
-            $success = false;
+        $credentials = array(
+            'username' => $posted['username'],
+            'password' => $posted['password'],
+            'email' => $posted['email']
+        );
+
+        try {
+            $user = Gatekeeper::findUserByUsername($posted['username']);
             $message = 'User "'.$posted['username'].'" already exists!';
-        } else {
-            $success = $user->create($posted);
+            $success = false;
+        } catch (\Exception $e) {
+            // Not found - register!
+            $success = Gatekeeper::register($credentials);
             if ($success === false) {
                 $message = 'There was an error creating the user!';
             }
