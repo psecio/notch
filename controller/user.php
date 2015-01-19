@@ -141,6 +141,10 @@ $app->group('/user', function() use ($app, $di) {
         $app->render('/user/delete.php', $data);
     });
     $app->post('/delete/:username', function($username) use ($app, $di) {
+        if ($user->inGroup('3') === false) {
+            $app->redirect('/error');
+        }
+
         $message = 'There was an error deleteing user '.$username;
         $user = new Notch\Users($di);
         $userData = $user->getUserByUsername($username);
