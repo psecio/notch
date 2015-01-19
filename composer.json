@@ -20,7 +20,7 @@
         "ircmaxell/password-compat": "1.0.4",
         "psecio/csrf": "dev-master",
         "php":">=5.3.1",
-        "psecio/gatekeeper": "1.5"
+        "psecio/gatekeeper": "1.6"
     },
     "require-dev": {
         "phpunit/phpunit": "4.2.6"
