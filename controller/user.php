@@ -20,18 +20,14 @@ $app->group('/user', function() use ($app, $di) {
             'username' => $username,
             'password' => $password
         );
-        $result = Gatekeeper::authenticate($credentials);
-        var_export($result);
-
-        $user = new Notch\Users($di);
-        $success = $user->login($username, $password);
+        $success = Gatekeeper::authenticate($credentials);
 
         if ($success === false) {
             $message = 'There was an error logging in!';
         } else {
-            $userData = $user->getUserByUsername($username);
-            $_SESSION['username'] = $userData['username'];
-            $_SESSION['userId'] = $userData['id'];
+            $userData = Gatekeeper::findUserByUsername($username);
+            $_SESSION['username'] = $userData->username;
+            $_SESSION['userId'] = $userData->id;
         }
 
         $data = array(
