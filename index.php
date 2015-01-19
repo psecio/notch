@@ -5,6 +5,9 @@ require_once 'vendor/autoload.php';
 require 'templates/header.php';
 
 use Pimple\Container;
+use Psecio\Gatekeeper\Gatekeeper;
+
+Gatekeeper::init();
 
 // Custom autoloader
 spl_autoload_register(function($class) {
