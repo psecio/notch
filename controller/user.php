@@ -126,6 +126,12 @@ $app->group('/user', function() use ($app, $di) {
 
     // ------ Delete ------
     $app->get('/delete/:username', function($username) use ($app, $di) {
+        // Be sure the current user is in the admin group
+        $user = Gatekeeper::findUserById($_SESSION['userId']);
+        if ($user->inGroup('3') === false) {
+            $app->redirect('/error');
+        }
+
         $user = new Notch\Users($di);
         $userData = $user->getUserByUsername($username);
 
